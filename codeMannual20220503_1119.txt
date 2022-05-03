@@ -1,0 +1,43 @@
+Assumption to be addressed: 
+1. NFT is represented as a string
+2. time horizon is negligible
+
+Problem 1 : admission
+-> set up the addmissionFee
+-> receive ether: check EOA, check enough fee, else fallback
+-> fallback: ether
+-> impose the reentrancy lock
+-> collect the string NFT
+-> record the address and NFT info in mapping
+-> record the info in the NFT mapping
+-> 1 weeks
+
+Problem 2: View NFT
+-> Display all strings of NFT
+Problem 3: Offer prices and buy NFT
+-> view the latest offered prices
+-> parti can offer prices to buy the NFT
+-> owner of the NFT can select and confirm the highest value buyer
+-> act as intermediary for NFT tx
+-> update info in mappings
+-> 1.5 weeks
+
+Problem 4: Voting
+-> Choose the 2 NFT among all of them. 
+-> 0.5 week
+
+Problem 5: Distribute reward to owners
+-> Calculate total no of votes
+-> Select the winning NFT and pay the reward to the owner
+-> pay the profit to me
+
+
+
+TODOList
+// change the name the offer price
+
+
+https://github.com/etherdata-blockchain/demos/tree/main/packages/file_storage_contract
+https://github.com/etherdata-blockchain/demos/tree/main/examples/personal_storage
+https://github.com/vadimdemedes/ink
+https://github.com/chalk/chalk，https://github.com/SBoudrias/Inquirer.js/
