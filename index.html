@@ -61,18 +61,12 @@
         DisplayText = "<h1>"+ArtName+"</h1><h2>Owner by <b><u>"+ArtOwner+"</u></b></h2>";
         if (VotesRemaining() == 2) {
           DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='VoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
-        } else if (VotesRemaining() == 1) {
-          if (v1 == ArtFilename || v2 == ArtFilename) {
-            DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='UnvoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Unvote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
-          } else {
-            DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='VoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
-          }
+        } else if (v1 == ArtFilename || v2 == ArtFilename) {
+          DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='UnvoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Unvote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
+        }  else if (VotesRemaining() == 1) {
+          DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='VoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
         } else {
-          if (v1 == ArtFilename || v2 == ArtFilename) {
-            DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='UnvoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Unvote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
-          } else {
-            DisplayText = DisplayText + "<p align=center><button id='blankbutton'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
-          }
+          DisplayText = DisplayText + "<p align=center><button id='blankbutton'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
         }
         DisplayText = DisplayText + "<p>"+VotesRemaining()+" Votes Remaining</p>";
         return DisplayText;
