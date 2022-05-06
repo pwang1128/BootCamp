@@ -17,6 +17,7 @@
     <script defer src="/__/firebase/9.7.0/firebase-analytics-compat.js"></script>
     <script defer src="/__/firebase/9.7.0/firebase-remote-config-compat.js"></script>
     <script defer src="/__/firebase/9.7.0/firebase-performance-compat.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- 
       initialize the SDK after all desired features are loaded, set useEmulator to false
       to avoid connecting the SDK to running emulators.
@@ -24,27 +25,79 @@
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
     <script>
-      function Enter() {
-        var x = document.getElementById("welcome");
-        if (x.style.display === "none") {
-          x.style.display = "block";
-        } else {
-          x.style.display = "none";
-        }
+
+      $(document).ready(function(){
+        // jQuery methods go here...
+        $("#enterbutton").click(function(){
+          $("#welcome").hide();
+        });
+        
+      });
+      var v1 = null; //results of the first vote
+      var v2 = null; //results of the second vote
+
+      function VotesRemaining() {
+        var votesleft = 0;
+        if (v1 == null) {votesleft = votesleft + 1;}
+        if (v2 == null) {votesleft = votesleft + 1;}
+        return votesleft;
       }
-      function ShowArt(y,t,o) {
+      function ShowArt(ArtFilename,ArtName,ArtOwner) {
         var x = document.getElementById("Art");
         var v = document.getElementById("Vote");
         if (x.style.display === "none") {
           x.style.display = "block";
           v.style.display = "block";
 
-          x.innerHTML = "<img src='"+y+"' height=100%>";
-          v.innerHTML = "<h1>"+t+"</h1><h2>Owner by <b><u>"+o+"</u></b></h2><p align=center><button id='enterbutton'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
+          x.innerHTML = "<img src='"+ArtFilename+"' height=100%>";
+          v.innerHTML = PanelDisplay(ArtFilename,ArtName,ArtOwner);
         } else {
           x.style.display = "none";
           v.style.display = "none";
         } 
+      }
+      
+      function PanelDisplay(ArtFilename,ArtName,ArtOwner) {
+        DisplayText = "<h1>"+ArtName+"</h1><h2>Owner by <b><u>"+ArtOwner+"</u></b></h2>";
+        if (VotesRemaining() == 2) {
+          DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='VoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
+        } else if (VotesRemaining() == 1) {
+          if (v1 == ArtFilename || v2 == ArtFilename) {
+            DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='UnvoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Unvote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
+          } else {
+            DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='VoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
+          }
+        } else {
+          if (v1 == ArtFilename || v2 == ArtFilename) {
+            DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='UnvoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Unvote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
+          } else {
+            DisplayText = DisplayText + "<p align=center><button id='blankbutton'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
+          }
+        }
+        DisplayText = DisplayText + "<p>"+VotesRemaining()+" Votes Remaining</p>";
+        return DisplayText;
+      }
+
+      function VoteArt(ArtFilename,ArtName,ArtOwner) {
+        if (v1 == null) {
+          v1 = ArtFilename;
+        } else if (v2 == null) {
+          v2 = ArtFilename;
+        }
+        //Refresh Panel
+        var v = document.getElementById("Vote");
+        v.innerHTML = PanelDisplay(ArtFilename,ArtName,ArtOwner);
+      }
+
+      function UnvoteArt(ArtFilename,ArtName,ArtOwner) {
+        if (v1 == ArtFilename) {
+          v1 = null;
+        } else if (v2 == ArtFilename) {
+          v2 = null;
+        }
+        //Refresh Panel
+        var v = document.getElementById("Vote");
+        v.innerHTML = PanelDisplay(ArtFilename,ArtName,ArtOwner);
       }
     </script>
     <style media="screen">
@@ -58,30 +111,27 @@
         margin: 0; 
         padding: 0; 
       }
-      #message { float: left; max-width: 300px; padding: 25px; margin:10px;}
-      #message h2 { color: #B041FF; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      #gallery {
-        position: absolute;
-        top: 5%;
-        left: 10%;
-        bottom: 25%;
-        right: 10%;
-        background-image: url("gallery.png");
-        background-size: 100% 100%;
-        padding: 25px;
-        margin: 0px; 
-      }
-      #gallery h2 { color: #B041FF; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #gallery p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
       #welcome {
         background-color: white; 
         position: absolute;
         margin: 10px;
+      }
+      #welcome h2 { color: #B041FF; font-weight: bold; font-size: 24px; margin: 0 0 8px; }
+      #welcome h1 { font-size: 30px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+      #welcome p { line-height: 140%; margin: 16px 0 24px; font-size: 20px; }
+      #welcome a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
+      #welcome, #welcome a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
+      #gallery {
+        position: absolute;
+        top: 2%;
+        left: 2%;
+        bottom: 2%;
+        right: 2%;
+        background-image: url("gallery.png");
+        background-size: 100% 100%;
+        padding: 25px;
+        margin: 0px; 
       }
       #Art {
         position: absolute; 
@@ -97,6 +147,8 @@
         padding: 15px;
         border-radius: 25px;
       }
+      #Vote h1 { font-size: 30px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+      #Vote h2 { color: #B041FF; font-weight: bold; font-size: 24px; margin: 0 0 8px; }
       #enterbutton {
         background-color: #1589FF;
         border: none;
@@ -110,6 +162,18 @@
         text-transform: uppercase;
         cursor: pointer;
       }
+      #blankbutton {
+        background-color: grey;
+        border: none;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 12px;
+        text-transform: uppercase;
+      }
       #artbutton {
         background:none;
         border: none;
@@ -121,7 +185,6 @@
         height: 20%;
         text-align: center;
         text-decoration: none;
-        display: inline-block;
         font-size: 16px;
         border-radius: 12px;
         cursor: pointer;
@@ -132,7 +195,7 @@
     <div id="gallery">
       <div id="welcome">
         <table>
-          <tr><td colspan="2"><img src="welcome.png"></td><td rowspan="2">
+          <tr><td colspan="2"><img src="welcome.png" width="20%"></td><td rowspan="2">
             <img src="podium.png" width="100%">
           <h2>Winner Definition</h2>
           <p>The winners will be rewarded with generous prizes bag. The competition winners are those who rank <u>1st place</u>, <u>2nd place</u>, and <u>3rd place</u>. Ranking are based on the artwork's total votes.</p>
@@ -144,7 +207,7 @@
             <h2>For Voting</h2>
           <p>Each Fantantic artwork is displayed in the competition room and the winners are determined by all contestants. Each contestant will get two votes on two different Artwork.</p>
           </td></tr>
-          <tr><td colspan=3><p align="center"><button id="enterbutton" onclick="Enter()">Enter</button></p></td></tr>
+          <tr><td colspan=3><p align="center"><button id="enterbutton">Enter</button></p></td></tr>
         </table>
       </div>
       <div id="Art" style="display:none;"></div>
