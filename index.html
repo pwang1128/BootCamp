@@ -24,6 +24,8 @@
     -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <script>
 
       $(document).ready(function(){
@@ -36,13 +38,24 @@
       var v1 = null; //results of the first vote
       var v2 = null; //results of the second vote
 
+      function Stars(NumStars) {
+        StarCode = "";
+        for (let i = 1; i <= Math.min(NumStars,5); i++) {
+          StarCode += "<span class='fa fa-star checked'></span>";
+        }
+        for (let i = Math.min(NumStars,5); i <= 4; i++) {
+          StarCode += "<span class='fa fa-star'></span>";
+        }
+        return StarCode;
+      }
+
       function VotesRemaining() {
         var votesleft = 0;
         if (v1 == null) {votesleft = votesleft + 1;}
         if (v2 == null) {votesleft = votesleft + 1;}
         return votesleft;
       }
-      function ShowArt(ArtFilename,ArtName,ArtOwner) {
+      function ShowArt(ArtFilename,ArtName,ArtOwner,ArtDesc,ArtRank) {
         var x = document.getElementById("Art");
         var v = document.getElementById("Vote");
         if (x.style.display === "none") {
@@ -50,21 +63,21 @@
           v.style.display = "block";
 
           x.innerHTML = "<img src='"+ArtFilename+"' height=100%>";
-          v.innerHTML = PanelDisplay(ArtFilename,ArtName,ArtOwner);
+          v.innerHTML = PanelDisplay(ArtFilename,ArtName,ArtOwner,ArtDesc,ArtRank);
         } else {
           x.style.display = "none";
           v.style.display = "none";
         } 
       }
       
-      function PanelDisplay(ArtFilename,ArtName,ArtOwner) {
-        DisplayText = "<h1>"+ArtName+"</h1><h2>Owner by <b><u>"+ArtOwner+"</u></b></h2>";
+      function PanelDisplay(ArtFilename,ArtName,ArtOwner,ArtDesc,ArtRank) {
+        DisplayText = "<h1>"+ArtName+"</h1><h2>Owner by <b><u>"+ArtOwner+"</u></b></h2><h3><a href=# alt='Link to Forum'>"+ArtDesc+"</a></h3><p>"+Stars(ArtRank)+"</p>";
         if (VotesRemaining() == 2) {
-          DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='VoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
+          DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='VoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\",\""+ArtDesc+"\",\""+ArtRank+"\")'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
         } else if (v1 == ArtFilename || v2 == ArtFilename) {
-          DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='UnvoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Unvote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
+          DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='UnvoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\",\""+ArtDesc+"\",\""+ArtRank+"\")'>Unvote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
         }  else if (VotesRemaining() == 1) {
-          DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='VoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\")'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
+          DisplayText = DisplayText + "<p align=center><button id='enterbutton' onClick='VoteArt(\""+ArtFilename+"\",\""+ArtName+"\",\""+ArtOwner+"\",\""+ArtDesc+"\",\""+ArtRank+"\")'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
         } else {
           DisplayText = DisplayText + "<p align=center><button id='blankbutton'>Vote</button> <button id='enterbutton' onClick='ShowArt()'>Close</button></p>";
         }
@@ -72,7 +85,7 @@
         return DisplayText;
       }
 
-      function VoteArt(ArtFilename,ArtName,ArtOwner) {
+      function VoteArt(ArtFilename,ArtName,ArtOwner,ArtDesc,ArtRank) {
         if (v1 == null) {
           v1 = ArtFilename;
         } else if (v2 == null) {
@@ -80,10 +93,10 @@
         }
         //Refresh Panel
         var v = document.getElementById("Vote");
-        v.innerHTML = PanelDisplay(ArtFilename,ArtName,ArtOwner);
+        v.innerHTML = PanelDisplay(ArtFilename,ArtName,ArtOwner,ArtDesc,ArtRank);
       }
 
-      function UnvoteArt(ArtFilename,ArtName,ArtOwner) {
+      function UnvoteArt(ArtFilename,ArtName,ArtOwner,ArtDesc,ArtRank) {
         if (v1 == ArtFilename) {
           v1 = null;
         } else if (v2 == ArtFilename) {
@@ -91,10 +104,13 @@
         }
         //Refresh Panel
         var v = document.getElementById("Vote");
-        v.innerHTML = PanelDisplay(ArtFilename,ArtName,ArtOwner);
+        v.innerHTML = PanelDisplay(ArtFilename,ArtName,ArtOwner,ArtDesc,ArtRank);
       }
     </script>
     <style media="screen">
+      .checked {
+        color: orange;
+      }
       body { 
         background-image: url("bg.png");  
         background-repeat: no-repeat;
@@ -206,11 +222,11 @@
       </div>
       <div id="Art" style="display:none;"></div>
       <div id="Vote" style="display:none;"></div>
-      <button id="artbutton" onclick="ShowArt('art1.png','Picture1','Owner1')"></button>
-      <button id="artbutton" onclick="ShowArt('art2.png','Picture2','Owner2')"></button>
-      <button id="artbutton" onclick="ShowArt('art3.png','Picture3','Owner3')"></button>
-      <button id="artbutton" onclick="ShowArt('art4.png','Picture4','Owner4')"></button>
-      <button id="artbutton" onclick="ShowArt('art5.png','Picture5','Owner5')"></button>
+      <button id="artbutton" onclick="ShowArt('art1.png','Picture1','Owner1','Link to Forum 1',2)"></button>
+      <button id="artbutton" onclick="ShowArt('art2.png','Picture2','Owner2','Link to Forum 2',3)"></button>
+      <button id="artbutton" onclick="ShowArt('art3.png','Picture3','Owner3','Link to Forum 3',5)"></button>
+      <button id="artbutton" onclick="ShowArt('art4.png','Picture4','Owner4','Link to Forum 4',4)"></button>
+      <button id="artbutton" onclick="ShowArt('art5.png','Picture5','Owner5','Link to Forum 5',1)"></button>
     </div>
 
     <script>
