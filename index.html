@@ -141,7 +141,7 @@
 
       function CheckWallet() {
         var w = document.getElementById('walletaddress').value;
-        var re = new RegExp("^([a-e0-9])$");
+        var re = new RegExp("^([A-Fa-f0-9])$");
         if (w.length >= 25 && re.test(w)) {
           $("#FinalSubmit").show();
           $("#BlankSubmit").hide();          
