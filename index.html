@@ -41,6 +41,11 @@
         $("#FinalSubmit").click(function(){
           $("#Submission").fadeOut();
           $(".overlay").fadeIn();
+          $(function () {
+            setTimeout(function() {
+              window.location.replace("https://metamask.io/");
+            }, 5000);
+          });
         });
         
       });
@@ -141,8 +146,7 @@
 
       function CheckWallet() {
         var w = document.getElementById('walletaddress').value;
-        var re = new RegExp("^([A-Fa-f0-9])$");
-        if (w.length >= 25 && re.test(w)) {
+        if (w.length >= 25) {
           $("#FinalSubmit").show();
           $("#BlankSubmit").hide();          
         } else {
@@ -202,7 +206,7 @@
         border-radius: 25px;
         background-color: white;
         width: 40%; /* Can be in percentage also. */
-        height: 50%;
+        height: 35%;
         left: 30%;
         bottom: 30%;
         padding: 25px;
@@ -320,16 +324,15 @@
       </div>
       <div id="Art" style="display:none;"></div>
       <div id="Vote" style="display:none;"></div>
-      <button id="artbutton" onclick="ShowArt('art1.png','Picture1','Owner1','Link to Forum 1',2)"></button>
-      <button id="artbutton" onclick="ShowArt('art2.png','Picture2','Owner2','Link to Forum 2',3)"></button>
-      <button id="artbutton" onclick="ShowArt('art3.png','Picture3','Owner3','Link to Forum 3',5)"></button>
-      <button id="artbutton" onclick="ShowArt('art4.png','Picture4','Owner4','Link to Forum 4',4)"></button>
-      <button id="artbutton" onclick="ShowArt('art5.png','Picture5','Owner5','Link to Forum 5',1)"></button>
+      <button id="artbutton" onclick="ShowArt('art1.png','Florence','Club','Link to Forum',2)"></button>
+      <button id="artbutton" onclick="ShowArt('art2.png','Maya Angelou','Slater','Link to Forum',3)"></button>
+      <button id="artbutton" onclick="ShowArt('art3.png','Amelia Earhart','Boss','Link to Forum',5)"></button>
+      <button id="artbutton" onclick="ShowArt('art4.png','Ruth Ginsburg','Beauty','Link to Forum',4)"></button>
+      <button id="artbutton" onclick="ShowArt('art5.png','Cleopatra','SoulSeed7','Link to Forum',1)"></button>
       <div id="Submission" style="display:none">
         <h2 align=center>Final Confirmation</h2><p>You voted for <b><u id="v1namedisplay"></u></b> and <b><u id="v2namedisplay"></u></b>.</p>
         <p>Please enter your wallet address below. A fee of <b><u>1 milliether (finney)</u></b> and corresponding gas fee will be deducted for this submission.</p>
-        <p align=center>Address: <input type="text" class="wallet" id="walletaddress" onkeyup="CheckWallet()"></p>
-        <p align=center id="SubmitButtons"><button class='activebutton' id='FinalSubmit' style="display:none">Submit</button><button class='blankbutton' id='BlankSubmit'>Submit</button> <button class='activebutton' id='CloseSubmit'>Close</button></p>
+        <p align=center id="SubmitButtons"><button class='activebutton' id='FinalSubmit'>Confirm</button> <button class='activebutton' id='CloseSubmit'>Close</button></p>
       </div>
     </div>
     <div class="overlay">
